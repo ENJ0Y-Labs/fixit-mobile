@@ -7,8 +7,9 @@ Native Android application for the FixIt marketplace, built with Kotlin and Jetp
 - Phase 1: Android project foundation and role-separated workspace navigation.
 - Phase 2: Shared native design system and reusable Compose components.
 - Phase 3: Native customer marketplace and customer workflows, using isolated local demonstration data.
+- Phase 4: Native provider dashboard, profile, services, availability, job discovery, quotes, accepted-job progress, earnings, reviews and settings.
 
-The customer workspace includes home/discovery, provider search and filters, public provider profiles, job posting, My Jobs, job details and local cancellation, payment information, reviews, and account settings. Customer messaging is intentionally not included: the source frontend's engineering guide explicitly excludes in-app chat and inbox workflows from the current product scope.
+The customer and provider workspaces use local demonstration records. Provider messaging is excluded because the source frontend's root engineering guide explicitly excludes in-app chat and inbox workflows for both customers and providers.
 
 ## Stack
 
@@ -21,11 +22,15 @@ The customer workspace includes home/discovery, provider search and filters, pub
 
 Open the repository in Android Studio, allow Gradle sync, then run the app configuration on an emulator or Android device. Requirements: JDK 17 and Android SDK 36.
 
-## Shared design system
+## Provider demo limitations
 
-Native design tokens are ported from the shared CSS design system in the frontend repository.
-
-Reusable Compose components include primary and secondary buttons, text fields, dropdowns, cards, status badges, confirmation dialogs, loading/empty/error/offline states, top app bar, bottom navigation, image selection/preview, and a responsive content container.
+- Job opportunities, accepted jobs, bids, reviews and earnings are sample records, not live platform data.
+- Profile, service, availability, preference, quote and job-progress changes remain in local Compose state for the current app session.
+- Saving a quote does not send it to a customer. A quote is not an accepted job.
+- Accepted-job status changes are local demonstrations. The customer has not been notified and no real job state has changed.
+- Earnings are illustrative and separated into estimated, agreed and paid categories. No payout, withdrawal or bank-account action is available.
+- Provider messaging is excluded by the source product rules.
+- No provider API endpoint is called. The provider repository documents proposed contracts only, and no backend is deployed.
 
 ## Customer demo limitations
 
@@ -34,13 +39,6 @@ Reusable Compose components include primary and secondary buttons, text fields, 
 - Payment options are informational only. No card, bank transfer, escrow, or payment-provider operation is performed.
 - Image selection previews a local content URI only. No image is uploaded.
 - No customer API endpoint is called. The source repository's backend contracts are proposed and no backend is deployed.
-- Customer messaging is excluded by the source frontend's current product rules.
-
-Do not present local demo interactions as persisted or completed server operations.
-
-## Other workspaces
-
-Provider and Admin currently retain the Phase 1 workspace scaffold. Their native workflows are not yet converted.
 
 ## Backend discipline
 
