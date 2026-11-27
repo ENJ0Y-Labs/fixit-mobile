@@ -24,10 +24,10 @@ class AdminAppTest {
         composeRule.setContent { AdminApp(onWorkspaceChange = {}) }
         composeRule.onNodeWithText("Sign in to admin preview").performClick()
         composeRule.onNodeWithText("More").performClick()
-        composeRule.onNodeWithText("Open Settings").performClick()
+        composeRule.onNodeWithText("Settings").performClick()
         composeRule.onNodeWithText("Settings").assertIsDisplayed()
         composeRule.onNodeWithText("More").performClick()
-        composeRule.onNodeWithText("Open Admin account").performClick()
+        composeRule.onNodeWithText("Admin account").performClick()
         composeRule.onNodeWithText("Admin account").assertIsDisplayed()
     }
 }
