@@ -25,6 +25,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.fixit.mobile.ui.components.*
 import com.fixit.mobile.ui.model.Workspace
@@ -98,7 +99,7 @@ private fun AdminDemoGate(
             Text("Local demo access", fontWeight = FontWeight.SemiBold)
             Text("This is a demonstration gate only. It does not authenticate with a server or protect production admin operations.", color = FixItMuted, style = MaterialTheme.typography.bodySmall)
             FixItTextField(value = email, onValueChange = onEmailChange, label = "Demo email")
-            FixItTextField(value = password, onValueChange = onPasswordChange, label = "Demo password")
+            OutlinedTextField(value = password, onValueChange = onPasswordChange, label = { Text("Demo password") }, modifier = Modifier.fillMaxWidth(), singleLine = true, visualTransformation = PasswordVisualTransformation())
             if (error) Text("The demo email or password is incorrect.", color = FixItDanger)
             FixItPrimaryButton("Sign in to admin preview", onLogin, Modifier.fillMaxWidth())
             Text("Demo credentials are prefilled for local preview.", color = FixItMuted, style = MaterialTheme.typography.labelSmall)
