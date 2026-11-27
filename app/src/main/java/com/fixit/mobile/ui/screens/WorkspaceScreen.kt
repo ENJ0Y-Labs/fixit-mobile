@@ -1,7 +1,5 @@
 package com.fixit.mobile.ui.screens
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -17,6 +15,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.fixit.mobile.ui.components.FixItBottomNavigation
+import com.fixit.mobile.ui.components.FixItCard
+import com.fixit.mobile.ui.components.FixItNavigationItem
+import com.fixit.mobile.ui.components.FixItResponsiveContent
+import com.fixit.mobile.ui.components.FixItTopAppBar
 import com.fixit.mobile.ui.model.Workspace
 import com.fixit.mobile.ui.model.WorkspaceCatalog
 import com.fixit.mobile.ui.theme.*
@@ -30,102 +33,69 @@ fun WorkspaceScreen(workspace: Workspace, onWorkspaceChange: (Workspace) -> Unit
     var moreOpen by remember { mutableStateOf(false) }
     val selected = sections.firstOrNull { it.title == selectedTitle } ?: sections.first()
     val primary = sections.take(4)
+    val navigationItems = primary.mapIndexed { index, section ->
+        FixItNavigationItem(section.title, when (index) {
+            0 -> Icons.Default.Home
+            1 -> Icons.Default.Search
+            2 -> Icons.Default.ArrowForward
+            else -> Icons.Default.Menu
+        })
+    } + if (sections.size > 4) listOf(FixItNavigationItem("More", Icons.Default.Menu)) else emptyList()
 
     Scaffold(
         containerColor = FixItBackground,
         topBar = {
-            TopAppBar(
-                title = {
-                    Column {
-                        Text("FixIt", fontWeight = FontWeight.Bold)
-                        Text(workspace.label.uppercase(), style = MaterialTheme.typography.labelSmall, color = FixItMuted)
-                    }
-                },
+            FixItTopAppBar(
+                title = "FixIt",
+                subtitle = workspace.label.uppercase(),
                 actions = {
                     IconButton(onClick = { switcherOpen = true }) {
                         Icon(Icons.Default.AccountCircle, contentDescription = "Switch workspace")
                     }
                     DropdownMenu(expanded = switcherOpen, onDismissRequest = { switcherOpen = false }) {
                         Workspace.entries.forEach { item ->
-                            DropdownMenuItem(
-                                text = { Text(item.label) },
-                                onClick = { switcherOpen = false; onWorkspaceChange(item) }
-                            )
+                            DropdownMenuItem(text = { Text(item.label) }, onClick = { switcherOpen = false; onWorkspaceChange(item) })
                         }
                     }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = FixItSurface)
+                }
             )
         },
         bottomBar = {
-            NavigationBar(containerColor = FixItSurface) {
-                primary.forEachIndexed { index, section ->
-                    NavigationBarItem(
-                        selected = selectedTitle == section.title,
-                        onClick = { selectedTitle = section.title },
-                        icon = {
-                            Icon(
-                                when (index) {
-                                    0 -> Icons.Default.Home
-                                    1 -> Icons.Default.Search
-                                    2 -> Icons.Default.ArrowForward
-                                    else -> Icons.Default.Menu
-                                },
-                                contentDescription = null
-                            )
-                        },
-                        label = { Text(section.title, maxLines = 1) }
-                    )
-                }
-                if (sections.size > 4) {
-                    NavigationBarItem(
-                        selected = selectedTitle !in primary.map { it.title },
-                        onClick = { moreOpen = true },
-                        icon = { Icon(Icons.Default.Menu, contentDescription = null) },
-                        label = { Text("More") }
-                    )
-                }
-            }
+            FixItBottomNavigation(
+                items = navigationItems,
+                selectedLabel = if (selectedTitle !in primary.map { it.title }) "More" else selectedTitle,
+                onSelect = { label -> if (label == "More") moreOpen = true else selectedTitle = label }
+            )
         }
     ) { inset ->
-        LazyColumn(
-            Modifier.fillMaxSize().padding(inset),
-            contentPadding = PaddingValues(20.dp),
-            verticalArrangement = Arrangement.spacedBy(14.dp)
-        ) {
-            item {
-                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text("Welcome to FixIt", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, color = FixItInk)
-                    Text(selected.description, color = FixItMuted)
-                }
-            }
-            item {
-                Card(Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = FixItInk)) {
-                    Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text(selected.title, color = androidx.compose.ui.graphics.Color.White, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
-                        Text(selected.summary, color = androidx.compose.ui.graphics.Color.White.copy(alpha = .8f))
+        FixItResponsiveContent(modifier = Modifier.fillMaxSize().padding(inset)) {
+            LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(20.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
+                item {
+                    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                        Text("Welcome to FixIt", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, color = FixItInk)
+                        Text(selected.description, color = FixItMuted)
                     }
                 }
-            }
-            item { Text("Explore ${selected.title.lowercase()}", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold) }
-            items(selected.items) { label ->
-                Card(
-                    Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = FixItSurface),
-                    border = BorderStroke(1.dp, FixItBorder)
-                ) {
-                    Row(
-                        Modifier.fillMaxWidth().padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(label, Modifier.weight(1f))
-                        Icon(Icons.Default.ArrowForward, contentDescription = null, tint = FixItMuted)
+                item {
+                    Card(Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = FixItInk)) {
+                        Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Text(selected.title, color = androidx.compose.ui.graphics.Color.White, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+                            Text(selected.summary, color = androidx.compose.ui.graphics.Color.White.copy(alpha = .8f))
+                        }
                     }
                 }
-            }
-            item {
-                Text("Preview interface · Backend integration pending", style = MaterialTheme.typography.labelSmall, color = FixItMuted, modifier = Modifier.padding(top = 8.dp))
+                item { Text("Explore ${selected.title.lowercase()}", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold) }
+                items(selected.items) { label ->
+                    FixItCard {
+                        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+                            Text(label, Modifier.weight(1f))
+                            Icon(Icons.Default.ArrowForward, contentDescription = null, tint = FixItMuted)
+                        }
+                    }
+                }
+                item {
+                    Text("Preview interface · Backend integration pending", style = MaterialTheme.typography.labelSmall, color = FixItMuted, modifier = Modifier.padding(top = 8.dp))
+                }
             }
         }
     }
