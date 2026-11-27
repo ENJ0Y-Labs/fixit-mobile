@@ -1,0 +1,24 @@
+name: Android CI
+
+on:
+  push:
+    branches: [main, "conversion/**"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: gradle/gradle-build-action@v3
+        with:
+          gradle-version: "8.13"
+      - name: Run unit tests
+        run: gradle testDebugUnitTest
+      - name: Assemble debug APK
+        run: gradle assembleDebug
