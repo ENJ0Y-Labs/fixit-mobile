@@ -26,15 +26,6 @@ android {
     kotlinOptions { jvmTarget = "17" }
 }
 
-// Give the debug APK a stable, user-friendly filename.
-androidComponents {
-    onVariants { variant ->
-        variant.outputs.forEach { output ->
-            output.outputFileName.set("fixit.apk")
-        }
-    }
-}
-
 dependencies {
     val composeBom = platform("androidx.compose:compose-bom:2025.10.01")
     implementation(composeBom)
