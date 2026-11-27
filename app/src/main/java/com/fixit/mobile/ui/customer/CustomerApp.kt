@@ -83,6 +83,9 @@ fun CustomerApp(onWorkspaceChange: (Workspace) -> Unit) {
     var categoryFilter by remember { mutableStateOf("All categories") }
     var ratingFilter by remember { mutableStateOf(false) }
     var availableOnly by remember { mutableStateOf(false) }
+    var underFiveThousand by remember { mutableStateOf(false) }
+    var locationFilter by remember { mutableStateOf("All areas") }
+    var providerSort by remember { mutableStateOf("Recommended") }
     var selectedProvider by remember { mutableStateOf<CustomerProvider?>(null) }
     var selectedJobId by remember { mutableStateOf<String?>(null) }
     var showCancelDialog by remember { mutableStateOf(false) }
@@ -158,6 +161,12 @@ fun CustomerApp(onWorkspaceChange: (Workspace) -> Unit) {
                     onRatingOnly = { ratingFilter = it },
                     availableOnly = availableOnly,
                     onAvailableOnly = { availableOnly = it },
+                    underFiveThousand = underFiveThousand,
+                    onUnderFiveThousand = { underFiveThousand = it },
+                    location = locationFilter,
+                    onLocation = { locationFilter = it },
+                    sortBy = providerSort,
+                    onSortBy = { providerSort = it },
                     onProvider = { selectedProvider = it; page = "Provider profile" }
                 )
                 "Provider profile" -> selectedProvider?.let { provider ->
@@ -299,12 +308,25 @@ private fun SearchScreen(
     onRatingOnly: (Boolean) -> Unit,
     availableOnly: Boolean,
     onAvailableOnly: (Boolean) -> Unit,
+    underFiveThousand: Boolean,
+    onUnderFiveThousand: (Boolean) -> Unit,
+    location: String,
+    onLocation: (String) -> Unit,
+    sortBy: String,
+    onSortBy: (String) -> Unit,
     onProvider: (CustomerProvider) -> Unit
 ) {
     val providers = CustomerDemoData.providers.filter { provider ->
         val matchesQuery = query.isBlank() || listOf(provider.name, provider.profession, provider.service, provider.category).any { it.contains(query, true) }
         val matchesCategory = category == "All categories" || provider.category.equals(category, true)
-        matchesQuery && matchesCategory && (!ratingOnly || provider.rating >= 4.8) && (!availableOnly || provider.available)
+        val matchesLocation = location == "All areas" || provider.location == location
+        matchesQuery && matchesCategory && matchesLocation && (!ratingOnly || provider.rating >= 4.8) && (!availableOnly || provider.available) && (!underFiveThousand || provider.hourlyRate < 5000)
+    }.let { matches ->
+        when (sortBy) {
+            "Highest rated" -> matches.sortedByDescending { it.rating }
+            "Lowest rate" -> matches.sortedBy { it.hourlyRate }
+            else -> matches.sortedWith(compareByDescending<CustomerProvider> { it.rating }.thenByDescending { it.reviews })
+        }
     }
     LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(18.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         item {
@@ -313,10 +335,13 @@ private fun SearchScreen(
             Spacer(Modifier.height(8.dp))
             FixItTextField(query, onQuery, "Search services or providers", placeholder = "e.g. plumber, cleaning")
             FixItDropdown("Service category", listOf("All categories") + CustomerDemoData.categories, category, onCategory)
+            FixItDropdown("Service area", listOf("All areas") + CustomerDemoData.providers.map { it.location }.distinct().sorted(), location, onLocation)
+            FixItDropdown("Sort providers", listOf("Recommended", "Highest rated", "Lowest rate"), sortBy, onSortBy)
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 FilterChip(selected = ratingOnly, onClick = { onRatingOnly(!ratingOnly) }, label = { Text("4.8+ rating") })
-                FilterChip(selected = availableOnly, onClick = { onAvailableOnly(!availableOnly) }, label = { Text("Available now") })
+                FilterChip(selected = underFiveThousand, onClick = { onUnderFiveThousand(!underFiveThousand) }, label = { Text("Under ₦5,000/hr") })
             }
+            FilterChip(selected = availableOnly, onClick = { onAvailableOnly(!availableOnly) }, label = { Text("Available now") })
             Text("${providers.size} sample listings", color = FixItMuted, style = MaterialTheme.typography.labelMedium)
         }
         if (providers.isEmpty()) {
