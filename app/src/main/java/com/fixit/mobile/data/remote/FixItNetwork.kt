@@ -7,14 +7,18 @@ import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.net.URI
 import java.util.concurrent.TimeUnit
 
 object ApiConfig {
     val baseUrl: String get() = BuildConfig.API_BASE_URL.trim().let { if (it.endsWith("/")) it else "$it/" }
-    fun isConfigured(): Boolean = baseUrl.startsWith("http://") || baseUrl.startsWith("https://")
+    fun isConfigured(): Boolean = runCatching {
+        val parsed = URI(baseUrl)
+        (parsed.scheme == "http" || parsed.scheme == "https") &&
+            !parsed.host.isNullOrBlank() && parsed.path.orEmpty().contains("/api/v1/")
+    }.getOrDefault(false)
 }
 
-/** Keeps server-issued session cookies for the lifetime of the app process. */
 class InMemorySessionCookieJar : CookieJar {
     private val cookies = mutableMapOf<String, Cookie>()
     @Synchronized override fun saveFromResponse(url: HttpUrl, newCookies: List<Cookie>) {
