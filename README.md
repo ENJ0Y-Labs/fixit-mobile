@@ -20,9 +20,63 @@ The customer, provider and admin workspaces still use local demonstration record
 - Coil for image previews
 - JUnit and Compose UI tests
 
-## Run
+## Build and run the app
 
-Open the repository in Android Studio, allow Gradle sync, then run the app configuration on an emulator or Android device. Requirements: JDK 17 and Android SDK 36.
+### Requirements
+
+- Android Studio (current stable release recommended).
+- JDK 17. Android Studio's bundled JBR 17 can be selected in **Settings → Build, Execution, Deployment → Build Tools → Gradle → Gradle JDK**.
+- Android SDK 36 and the Android SDK Build-Tools installed through **Tools → SDK Manager**.
+- An Android emulator (created in **Tools → Device Manager**) or a physical Android device with USB debugging enabled.
+
+### Open the project in Android Studio
+
+1. Clone or download this repository.
+2. In Android Studio, select **File → Open** and choose the repository root, the folder containing `settings.gradle.kts`.
+3. Wait for Gradle sync to finish. Install any SDK components Android Studio prompts for.
+4. Select an emulator from the device dropdown, or connect an Android phone with USB debugging enabled.
+5. Select the **app** run configuration and click **Run ▶**. Android Studio will build, install and launch FixIt on the selected device.
+
+If Android Studio does not show an `app` run configuration, use **Run → Edit Configurations → + → Android App**, select the `app` module, and apply.
+
+### Build from the terminal
+
+The repository currently does not include the Gradle Wrapper, so the terminal commands below require Gradle to be installed and available on your PATH, plus JDK 17.
+
+From the repository root:
+
+```bash
+gradle :app:assembleDebug
+```
+
+The generated debug APK is:
+
+```text
+app/build/outputs/apk/debug/app-debug.apk
+```
+
+To run the unit tests:
+
+```bash
+gradle :app:testDebugUnitTest
+```
+
+To build and test in one go:
+
+```bash
+gradle :app:testDebugUnitTest :app:assembleDebug
+```
+
+To install the debug APK on a connected device or running emulator (with Android Debug Bridge available):
+
+```bash
+adb install -r app/build/outputs/apk/debug/app-debug.apk
+```
+
+Then open **FixIt** from the device's app launcher. Alternatively, use Android Studio's Run button to build, install and launch it in one step.
+
+On Windows PowerShell, run the same Gradle tasks using `gradle :app:assembleDebug` and `gradle :app:testDebugUnitTest`.
+
 
 ## Provider demo limitations
 
