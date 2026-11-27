@@ -52,7 +52,7 @@ gradle :app:assembleDebug
 The generated debug APK is:
 
 ```text
-app/build/outputs/apk/debug/app-debug.apk
+app/build/outputs/apk/debug/fixit.apk
 ```
 
 To run the unit tests:
@@ -70,7 +70,7 @@ gradle :app:testDebugUnitTest :app:assembleDebug
 To install the debug APK on a connected device or running emulator (with Android Debug Bridge available):
 
 ```bash
-adb install -r app/build/outputs/apk/debug/app-debug.apk
+adb install -r app/build/outputs/apk/debug/fixit.apk
 ```
 
 Then open **FixIt** from the device's app launcher. Alternatively, use Android Studio's Run button to build, install and launch it in one step.
