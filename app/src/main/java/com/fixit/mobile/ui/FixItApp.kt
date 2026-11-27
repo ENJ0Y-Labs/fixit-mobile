@@ -1,10 +1,10 @@
 package com.fixit.mobile.ui
 
 import androidx.compose.runtime.*
+import com.fixit.mobile.ui.admin.AdminApp
 import com.fixit.mobile.ui.customer.CustomerApp
 import com.fixit.mobile.ui.model.Workspace
 import com.fixit.mobile.ui.provider.ProviderApp
-import com.fixit.mobile.ui.screens.WorkspaceScreen
 
 @Composable
 fun FixItApp() {
@@ -12,6 +12,6 @@ fun FixItApp() {
     when (workspace) {
         Workspace.CUSTOMER -> CustomerApp(onWorkspaceChange = { workspace = it })
         Workspace.PROVIDER -> ProviderApp(onWorkspaceChange = { workspace = it })
-        Workspace.ADMIN -> WorkspaceScreen(workspace = workspace, onWorkspaceChange = { workspace = it })
+        Workspace.ADMIN -> AdminApp(onWorkspaceChange = { workspace = it })
     }
 }
