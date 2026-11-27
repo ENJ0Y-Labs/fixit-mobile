@@ -8,8 +8,9 @@ Native Android application for the FixIt marketplace, built with Kotlin and Jetp
 - Phase 2: Shared native design system and reusable Compose components.
 - Phase 3: Native customer marketplace and customer workflows, using isolated local demonstration data.
 - Phase 4: Native provider dashboard, profile, services, availability, job discovery, quotes, accepted-job progress, earnings, reviews and settings.
+- Phase 5: Native admin dashboard, customer/provider directories, verification queue, job oversight, disputes/support, categories, analytics, settings and read-only admin account.
 
-The customer and provider workspaces use local demonstration records. Provider messaging is excluded because the source frontend's root engineering guide explicitly excludes in-app chat and inbox workflows for both customers and providers.
+The customer, provider and admin workspaces use local demonstration records. Provider messaging is excluded because the source frontend's root engineering guide explicitly excludes in-app chat and inbox workflows for both customers and providers.
 
 ## Stack
 
@@ -39,6 +40,15 @@ Open the repository in Android Studio, allow Gradle sync, then run the app confi
 - Payment options are informational only. No card, bank transfer, escrow, or payment-provider operation is performed.
 - Image selection previews a local content URI only. No image is uploaded.
 - No customer API endpoint is called. The source repository's backend contracts are proposed and no backend is deployed.
+
+## Admin demo limitations
+
+- Admin records, metrics, verification decisions, account-status changes, job-status changes, support-case status changes, category edits and settings are local session demonstrations only.
+- The admin entry screen uses fixed demo credentials (`admin@fixit.local` / `FixitDemo123!`) solely to preview the interface. This is not production authentication and is not a security boundary.
+- No admin API endpoint is called. The frontend admin routes are proposed contracts, not confirmed live endpoints.
+- Verification document names are sample metadata; no private documents are attached. Support case controls do not send messages, assign real cases, resolve real disputes or issue refunds.
+- Admin account information is read-only. Password changes, MFA, session management, role changes and audit history require an approved backend authentication contract.
+- Backend authorization must protect every admin operation. Hiding screens or requiring a local demo password does not secure admin data.
 
 ## Backend discipline
 
