@@ -26,6 +26,19 @@ class CustomerAppTest {
     }
 
     @Test
+    fun customerCanSeeJobFormValidation() {
+        composeRule.setContent {
+            FixItTheme {
+                CustomerApp(onWorkspaceChange = {})
+            }
+        }
+
+        composeRule.onNodeWithText("Post a new job").performClick()
+        composeRule.onNodeWithText("Save demo job request").performClick()
+        composeRule.onNodeWithText("Enter a title, category, location and valid budget to continue.").assertIsDisplayed()
+    }
+
+    @Test
     fun customerCanOpenMyJobsTab() {
         composeRule.setContent {
             FixItTheme {
