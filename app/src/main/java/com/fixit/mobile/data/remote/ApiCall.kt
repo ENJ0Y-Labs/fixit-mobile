@@ -12,8 +12,9 @@ suspend fun apiCall(block: suspend () -> Response<JsonObject>): ApiResult<JsonOb
     else {
         val raw = response.errorBody()?.string().orEmpty()
         val payload = runCatching { JsonParser.parseString(raw).asJsonObject }.getOrNull()
-        val message = payload?.getAsJsonObject("error")?.get("message")?.asString
-            ?: payload?.get("message")?.asString
+        val errorObject = payload?.get("error")?.takeIf { it.isJsonObject }?.asJsonObject
+        val message = errorObject?.get("message")?.takeIf { it.isJsonPrimitive }?.asString
+            ?: payload?.get("message")?.takeIf { it.isJsonPrimitive }?.asString
             ?: when (response.code()) {
                 400, 422 -> "Some information is invalid. Review it and try again."
                 401 -> "Your session has expired. Sign in again."
@@ -26,7 +27,7 @@ suspend fun apiCall(block: suspend () -> Response<JsonObject>): ApiResult<JsonOb
             }
         ApiResult.Failure(ApiFailure(
             message,
-            payload?.getAsJsonObject("error")?.get("code")?.asString ?: "HTTP_" + response.code(),
+            errorObject?.get("code")?.takeIf { it.isJsonPrimitive }?.asString ?: "HTTP_" + response.code(),
             response.code(),
             response.headers()["Retry-After"]
         ))
