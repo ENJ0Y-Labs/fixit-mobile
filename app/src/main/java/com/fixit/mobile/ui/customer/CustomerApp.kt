@@ -173,7 +173,7 @@ fun CustomerApp(onWorkspaceChange: (Workspace) -> Unit) {
                 "Provider profile" -> selectedProvider?.let { provider ->
                     ProviderProfileScreen(provider, onRequest = { categoryFilter = provider.category; page = "Post a Job" })
                 } ?: EmptySelection("Provider profile unavailable", "Return to search and select a provider.")
-                "My Jobs" -> MyJobsScreen(jobs, onPostJob = { page = "Post a Job" }, onJob = { selectedJobId = it; page = "Job details" })
+                "My Jobs" -> MyJobsScreen(jobs, notice, onPostJob = { page = "Post a Job" }, onJob = { selectedJobId = it; page = "Job details" })
                 "Post a Job" -> PostJobScreen(
                     initialCategory = categoryFilter.takeIf { it != "All categories" } ?: "",
                     onSubmit = { draft ->
@@ -202,7 +202,7 @@ fun CustomerApp(onWorkspaceChange: (Workspace) -> Unit) {
                 } ?: EmptySelection("No job selected", "Choose a job from My Jobs to see its details.")
                 "Payment" -> selectedJob?.let { PaymentScreen(it) }
                     ?: EmptySelection("Payment unavailable", "Select a job before opening its payment summary.")
-                "Review" -> selectedJob?.let { ReviewScreen(it, onSubmitted = { notice = "Your review was saved locally for this demo."; page = "My Jobs" }) }
+                "Review" -> selectedJob?.let { ReviewScreen(it, onSubmitted = { notice = "Review preview completed. Nothing was published or stored."; page = "My Jobs" }) }
                     ?: EmptySelection("Review unavailable", "Select a completed job before writing a review.")
                 "Account" -> AccountScreen(notice = notice, onNotice = { notice = it })
                 else -> HomeScreen(jobs, { categoryFilter = it; page = "Search" }, { page = "Search" }, { selectedProvider = it; page = "Provider profile" }, { page = "Post a Job" }, { page = "My Jobs" }, { selectedJobId = it; page = "Job details" })
@@ -458,7 +458,7 @@ private fun PostJobScreen(initialCategory: String, onSubmit: (JobDraft) -> Unit)
 }
 
 @Composable
-private fun MyJobsScreen(jobs: List<CustomerJob>, onPostJob: () -> Unit, onJob: (String) -> Unit) {
+private fun MyJobsScreen(jobs: List<CustomerJob>, notice: String, onPostJob: () -> Unit, onJob: (String) -> Unit) {
     var filter by remember { mutableStateOf("All") }
     val filtered = jobs.filter {
         filter == "All" || when (filter) {
@@ -479,6 +479,7 @@ private fun MyJobsScreen(jobs: List<CustomerJob>, onPostJob: () -> Unit, onJob: 
                 }
             }
             FixItPrimaryButton("Post a job", onPostJob, Modifier.fillMaxWidth())
+            if (notice.isNotBlank()) Text(notice, color = FixItPrimary, style = MaterialTheme.typography.bodySmall)
         }
         if (filtered.isEmpty()) item { EmptySelection("No jobs in this view", "Try another status filter or post a new job.") }
         items(filtered, key = { it.id }) { job ->
@@ -589,8 +590,8 @@ private fun ReviewScreen(job: CustomerJob, onSubmitted: () -> Unit) {
                     androidx.compose.material3.Checkbox(checked = anonymous, onCheckedChange = { anonymous = it })
                     Text("Post anonymously")
                 }
-                FixItPrimaryButton("Save demo review", onSubmitted, Modifier.fillMaxWidth(), enabled = rating > 0)
-                Text("This review is saved only as a local demo interaction. It is not published.", color = FixItMuted, style = MaterialTheme.typography.bodySmall)
+                FixItPrimaryButton("Finish demo review", onSubmitted, Modifier.fillMaxWidth(), enabled = rating > 0)
+                Text("This is a review preview. The review is not stored or published in this build.", color = FixItMuted, style = MaterialTheme.typography.bodySmall)
             }
         }
     }
