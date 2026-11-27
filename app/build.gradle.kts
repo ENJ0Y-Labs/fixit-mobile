@@ -13,8 +13,8 @@ android {
         applicationId = "com.fixit.mobile"
         minSdk = 26
         targetSdk = 36
-        versionCode = 1
-        versionName = "0.3.0"
+        versionCode = 500
+        versionName = "0.5.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "API_BASE_URL", "\"" + fixitApiBaseUrl.get() + "\"")
     }
