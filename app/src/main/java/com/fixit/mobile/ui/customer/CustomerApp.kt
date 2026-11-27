@@ -150,6 +150,7 @@ fun CustomerApp(onWorkspaceChange: (Workspace) -> Unit) {
                     onSearch = { page = "Search" },
                     onProvider = { selectedProvider = it; page = "Provider profile" },
                     onPostJob = { page = "Post a Job" },
+                    onMyJobs = { page = "My Jobs" },
                     onJob = { selectedJobId = it; page = "Job details" }
                 )
                 "Search" -> SearchScreen(
@@ -204,7 +205,7 @@ fun CustomerApp(onWorkspaceChange: (Workspace) -> Unit) {
                 "Review" -> selectedJob?.let { ReviewScreen(it, onSubmitted = { notice = "Your review was saved locally for this demo."; page = "My Jobs" }) }
                     ?: EmptySelection("Review unavailable", "Select a completed job before writing a review.")
                 "Account" -> AccountScreen(notice = notice, onNotice = { notice = it })
-                else -> HomeScreen(jobs, { categoryFilter = it; page = "Search" }, { page = "Search" }, { selectedProvider = it; page = "Provider profile" }, { page = "Post a Job" }, { selectedJobId = it; page = "Job details" })
+                else -> HomeScreen(jobs, { categoryFilter = it; page = "Search" }, { page = "Search" }, { selectedProvider = it; page = "Provider profile" }, { page = "Post a Job" }, { page = "My Jobs" }, { selectedJobId = it; page = "Job details" })
             }
         }
     }
@@ -250,6 +251,7 @@ private fun HomeScreen(
     onSearch: () -> Unit,
     onProvider: (CustomerProvider) -> Unit,
     onPostJob: () -> Unit,
+    onMyJobs: () -> Unit,
     onJob: (String) -> Unit
 ) {
     LazyColumn(
@@ -290,7 +292,7 @@ private fun HomeScreen(
             FixItCard {
                 Text("Your jobs", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                 Text("${jobs.count { it.status == "IN_PROGRESS" }} active jobs · ${jobs.count { it.status == "AWAITING_BIDS" }} awaiting bids", color = FixItMuted)
-                FixItSecondaryButton("View my jobs", { onJob(jobs.firstOrNull()?.id ?: "") }, Modifier.fillMaxWidth(), enabled = jobs.isNotEmpty())
+                FixItSecondaryButton("View my jobs", onMyJobs, Modifier.fillMaxWidth())
             }
         }
         item { FixItPrimaryButton("Post a new job", onPostJob, Modifier.fillMaxWidth()) }
