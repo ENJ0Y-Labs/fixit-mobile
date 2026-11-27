@@ -219,6 +219,7 @@ fun FixItConfirmDialog(title: String, message: String, confirmLabel: String = "C
 
 data class FixItNavigationItem(val label: String, val icon: ImageVector, val contentDescription: String = label)
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FixItTopAppBar(title: String, subtitle: String? = null, actions: @Composable RowScope.() -> Unit = {}, navigationIcon: @Composable () -> Unit = {}) {
     TopAppBar(
