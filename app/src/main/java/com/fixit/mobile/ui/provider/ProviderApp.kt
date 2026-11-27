@@ -7,6 +7,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Work
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -58,10 +63,10 @@ fun ProviderApp(onWorkspaceChange: (Workspace) -> Unit) {
         bottomBar = {
             FixItBottomNavigation(
                 items = listOf(
-                    FixItNavigationItem("Home", androidx.compose.material.icons.Icons.Outlined.Home),
-                    FixItNavigationItem("Find jobs", androidx.compose.material.icons.Icons.Outlined.Search),
-                    FixItNavigationItem("My jobs", androidx.compose.material.icons.Icons.Outlined.Work),
-                    FixItNavigationItem("Account", androidx.compose.material.icons.Icons.Outlined.Person)
+                    FixItNavigationItem("Home", Icons.Filled.Home),
+                    FixItNavigationItem("Find jobs", Icons.Filled.Search),
+                    FixItNavigationItem("My jobs", Icons.Filled.Work),
+                    FixItNavigationItem("Account", Icons.Filled.Person)
                 ),
                 selectedLabel = when (page) {
                     "Dashboard" -> "Home"
