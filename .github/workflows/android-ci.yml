@@ -20,10 +20,19 @@ jobs:
           gradle-version: "8.13"
       - name: Run unit tests and assemble debug APK
         run: gradle :app:testDebugUnitTest :app:assembleDebug
-      - name: Upload debug APK
+      - name: Rename debug APK with app version
+        shell: bash
+        run: |
+          VERSION_NAME="$(sed -n 's/^[[:space:]]*versionName = "\([^"]*\)".*/\1/p' app/build.gradle.kts)"
+          if [ -z "$VERSION_NAME" ]; then
+            echo "Could not read versionName from app/build.gradle.kts"
+            exit 1
+          fi
+          cp app/build/outputs/apk/debug/app-debug.apk "app/build/outputs/apk/debug/fixit-mobile-v${VERSION_NAME}.apk"
+      - name: Upload versioned debug APK
         uses: actions/upload-artifact@v4
         with:
-          name: fixit-debug-apk
-          path: app/build/outputs/apk/debug/*.apk
+          name: fixit-mobile-v0.5.0
+          path: app/build/outputs/apk/debug/fixit-mobile-v0.5.0.apk
           if-no-files-found: error
           retention-days: 14
