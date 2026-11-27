@@ -6,10 +6,9 @@ Native Android application for the FixIt marketplace, built with Kotlin and Jetp
 
 - Phase 1: Android project foundation and role-separated workspace navigation.
 - Phase 2: Shared native design system and reusable Compose components.
+- Phase 3: Native customer marketplace and customer workflows, using isolated local demonstration data.
 
-The current workspace content remains a navigation scaffold. The design system is reusable infrastructure, not a claim that all customer, provider or admin screens have been converted. Demo copy is not live backend data.
-
-The frontend repository explicitly describes its apps as prototypes and API routes as proposed contracts. Do not claim that an action is persisted or authenticated until an approved backend contract is implemented.
+The customer workspace includes home/discovery, provider search and filters, public provider profiles, job posting, My Jobs, job details and local cancellation, payment information, reviews, and account settings. Customer messaging is intentionally not included: the source frontend's engineering guide explicitly excludes in-app chat and inbox workflows from the current product scope.
 
 ## Stack
 
@@ -26,24 +25,22 @@ Open the repository in Android Studio, allow Gradle sync, then run the app confi
 
 Native design tokens are ported from the shared CSS design system in the frontend repository.
 
-Reusable Compose components include:
+Reusable Compose components include primary and secondary buttons, text fields, dropdowns, cards, status badges, confirmation dialogs, loading/empty/error/offline states, top app bar, bottom navigation, image selection/preview, and a responsive content container.
 
-- Primary and secondary buttons
-- Text fields and dropdowns
-- Cards and status badges
-- Confirmation dialogs
-- Loading, empty, error and offline states
-- Top app bar and bottom navigation
-- Image selection and preview
-- Responsive content container
+## Customer demo limitations
 
-Image selection only returns a content URI to the caller. It does not upload a file. Actual upload behavior must follow the backend's approved storage/API contract.
+- Provider listings and seeded jobs are sample data, not live marketplace records.
+- New jobs, cancellation, profile edits and reviews remain in local Compose state for the current app session.
+- Payment options are informational only. No card, bank transfer, escrow, or payment-provider operation is performed.
+- Image selection previews a local content URI only. No image is uploaded.
+- No customer API endpoint is called. The source repository's backend contracts are proposed and no backend is deployed.
+- Customer messaging is excluded by the source frontend's current product rules.
 
-## Workspaces
+Do not present local demo interactions as persisted or completed server operations.
 
-Customer: discovery, jobs, job posting, payments, reviews and account.
-Provider: dashboard, profile, services, job discovery, bids/jobs, earnings, reviews and settings.
-Admin: dashboard, customers, providers, verification, jobs, disputes/support, categories, analytics and settings.
+## Other workspaces
+
+Provider and Admin currently retain the Phase 1 workspace scaffold. Their native workflows are not yet converted.
 
 ## Backend discipline
 
