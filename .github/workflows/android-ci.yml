@@ -20,3 +20,10 @@ jobs:
           gradle-version: "8.13"
       - name: Run unit tests and assemble debug APK
         run: gradle :app:testDebugUnitTest :app:assembleDebug
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: fixit-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+          retention-days: 14
