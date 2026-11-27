@@ -1,5 +1,7 @@
 package com.fixit.mobile.ui.admin
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -217,11 +219,10 @@ private fun AdminWorkspace(onWorkspaceChange: (Workspace) -> Unit, onLogout: () 
                 ListItem(
                     headlineContent = { Text(item) },
                     leadingContent = { Icon(sectionIcon(item), contentDescription = null) },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().clickable { page = item; moreOpen = false },
                     colors = ListItemDefaults.colors(containerColor = FixItSurface),
                     trailingContent = { Text("Open", color = FixItPrimary, style = MaterialTheme.typography.labelMedium) }
                 )
-                TextButton(onClick = { page = item; moreOpen = false }, modifier = Modifier.fillMaxWidth()) { Text("Open $item") }
                 HorizontalDivider(color = FixItBorder)
             }
             Spacer(Modifier.height(20.dp))
@@ -287,7 +288,7 @@ private fun AdminSearch(value: String, onChange: (String) -> Unit, placeholder: 
 
 @Composable
 private fun AdminFilter(options: List<String>, selected: String, onSelect: (String) -> Unit) {
-    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+    Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         options.forEach { option ->
             FilterChip(selected = selected == option, onClick = { onSelect(option) }, label = { Text(option) })
         }
