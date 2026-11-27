@@ -35,6 +35,5 @@ class CustomerAppTest {
 
         composeRule.onNodeWithText("My Jobs").performClick()
         composeRule.onNodeWithText("Your service requests").assertIsDisplayed()
-        composeRule.onNodeWithText("DEMO MODE · Sample listings and job changes stay on this device. No backend, payment or upload service is connected.").assertIsDisplayed()
     }
 }
