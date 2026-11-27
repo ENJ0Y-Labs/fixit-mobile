@@ -1,5 +1,6 @@
 package com.fixit.mobile.data.remote
 
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -8,8 +9,9 @@ class ApiConfigTest {
         assertTrue(ApiConfig.baseUrl.endsWith("/"))
         assertTrue(ApiConfig.isConfigured())
     }
+
     @Test fun cookieJarStartsWithoutAnAuthenticatedSession() {
         val jar = InMemorySessionCookieJar()
-        assertTrue(jar.loadForRequest(okhttp3.HttpUrl.get("https://example.test/")).isEmpty())
+        assertTrue(jar.loadForRequest("https://example.test/".toHttpUrl()).isEmpty())
     }
 }
