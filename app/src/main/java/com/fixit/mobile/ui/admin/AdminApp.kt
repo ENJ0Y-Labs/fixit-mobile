@@ -199,13 +199,29 @@ private fun AdminWorkspace(onWorkspaceChange: (Workspace) -> Unit, onLogout: () 
                         cases = cases.map { if (it.id == item.id) it.copy(status = status) else it }
                     }
                 })
-                "Categories" -> AdminCategories(categories, onToggle = { item ->
-                    ask(if (item.active) "Deactivate category?" else "Activate category?", "Change the local demo status for ${item.name}? Customer discovery and provider listings are not affected.") {
-                        categories = categories.map { if (it.id == item.id) it.copy(active = !it.active) else it }
-                    }, onCreate = { name, description ->
-                        categories = categories + AdminCategory("CAT-%03d".format(categories.size + 1), name, description, 0, 0, true)
-                    })
-                }
+                "Categories" -> AdminCategories(
+                    categories,
+                    onToggle = { item ->
+                        ask(
+                            if (item.active) "Deactivate category?" else "Activate category?",
+                            "Change the local demo status for ${item.name}? Customer discovery and provider listings are not affected."
+                        ) {
+                            categories = categories.map {
+                                if (it.id == item.id) it.copy(active = !it.active) else it
+                            }
+                        }
+                    },
+                    onCreate = { name, description ->
+                        categories = categories + AdminCategory(
+                            "CAT-%03d".format(categories.size + 1),
+                            name,
+                            description,
+                            0,
+                            0,
+                            true
+                        )
+                    }
+                )
                 "Analytics" -> AdminAnalytics(jobs.size, customers.size, providers.size, cases.size)
                 "Settings" -> AdminSettings()
                 else -> AdminAccount(onLogout = onLogout)
