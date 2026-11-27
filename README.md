@@ -9,8 +9,9 @@ Native Android application for the FixIt marketplace, built with Kotlin and Jetp
 - Phase 3: Native customer marketplace and customer workflows, using isolated local demonstration data.
 - Phase 4: Native provider dashboard, profile, services, availability, job discovery, quotes, accepted-job progress, earnings, reviews and settings.
 - Phase 5: Native admin dashboard, customer/provider directories, verification queue, job oversight, disputes/support, categories, analytics, settings and read-only admin account.
+- Phase 6 foundation: Retrofit/OkHttp transport, route declarations, auth/customer/provider/admin repositories, cookie handling, timeout configuration, and normalized API errors. See [BACKEND_INTEGRATION.md](./BACKEND_INTEGRATION.md).
 
-The customer, provider and admin workspaces use local demonstration records. Provider messaging is excluded because the source frontend's root engineering guide explicitly excludes in-app chat and inbox workflows for both customers and providers.
+The customer, provider and admin workspaces still use local demonstration records. The Phase 6 repositories are available, but the Compose screens have not yet been migrated to remote data. Provider messaging is excluded because the source frontend's root engineering guide explicitly excludes in-app chat and inbox workflows for both customers and providers.
 
 ## Stack
 
@@ -50,6 +51,8 @@ Open the repository in Android Studio, allow Gradle sync, then run the app confi
 - Admin account information is read-only. Password changes, MFA, session management, role changes and audit history require an approved backend authentication contract.
 - Backend authorization must protect every admin operation. Hiding screens or requiring a local demo password does not secure admin data.
 
-## Backend discipline
+## Backend integration boundary
 
-Do not invent endpoints. Keep demo state distinct from remote data. Backend owns authentication, authorization, persistence, payment processing and business rules. Use the approved API contract when the backend is available.
+The routes in the frontend repository are proposed contracts, not a deployed API or OpenAPI schema. The mobile transport and repositories map to those proposed routes, but existing Compose screens remain on demo fixtures until each screen is migrated and verified against a running service. The default emulator URL is a local development target, not a deployed backend. Cookie expiry, CSRF behavior, request/response fields, money units, pagination, upload rules, and admin permissions still require backend confirmation.
+
+The frontend engineering guide excludes customer/provider messaging and inboxes, so those workflows remain excluded from mobile.
